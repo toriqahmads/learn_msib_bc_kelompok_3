@@ -2,4 +2,4 @@
 
 Nama: Toriq Ahmad Salam
 Alamat: Jepara, Jawa Tengah
-Email: toriqahmads@gmail.com
+Email: toriqahmads2@gmail.com
