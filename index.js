@@ -51,7 +51,14 @@ let object1 = {
     }
 }
 
-console.log('tampilkan object: ', object1);
+console.log('tampilkan object: ', object1, object1.nomor, object1["key"], object1.object_anak.nomor_anak);
+
+// array adalah type data yg memiliki beberapa data dgn type yg berbeda-beda.
+let array1 = ["A", "AB", 3, 4.5, true, false, { "key": "value" }, ["array dalam array"]];
+    // index   0    1    2   3    4     5, ...
+console.log("tampilkan array: ", array1);
+console.log("array index 5 adalah: ", array1[6]["key"]);
+console.log("array di dalam di array: ", array1[7][0]);
 
 // konditional statement
 // konditional statement ini digunakan untuk melakukan pengecekan nilai, dan menentukan statement selanjutnya mana yg akan dieksekusi
@@ -98,3 +105,69 @@ switch (umur) {
         console.log('anak-anak');
         break;
 }
+
+
+// perulangan
+// perulangan di javascript digunakan untuk mengeksekusi statement program di dalam block perulangan secara berulang-ulang
+// ada beberapa perulangan, umumnya
+// for loop, while loop, do while loop
+
+// for loop
+for (i = 0; i < 10; i++) {
+    // block perulangan
+    console.log('ini perulangan for loop ke: ', i);
+}
+
+
+// while loop
+let j = 0;
+while (j <= 5) {
+    // block perulangan
+    console.log('ini perulangan while ke: ', j);
+    j++;
+}
+
+// do while
+let k = 5;
+do {
+    // block perulangan
+    console.log('ini perulangan do while ke: ', k);
+    k--;
+} while (k >= 1);
+
+
+// function adalah fungsi yg memiliki statement di dalam block fungsinya yg akan dieksekusi ketika fungsi tersebut dipanggil
+// fungsi pada umumnya
+
+// pendefinisian fungsi
+function hitungPanjangString(target) {
+    // block fungsi
+    const panjang_string = target.length;
+    console.log('panjang string di fungsi hitungPanjangString adalah: ', panjang_string);
+
+    return panjang_string;
+}
+
+// pemanggilan
+hitungPanjangString("test 1 2 3");
+
+function tanpaParameter() {
+    console.log('ini fungsi tanpa parameter');
+}
+
+tanpaParameter();
+
+function tampilkanStringJikaPanjangLebihDari(target, maksimal_panjang) {
+    const panjang_string = 0;
+    const panjang_string_di_fungsi_tampilkan = hitungPanjangString(target);
+    console.log('nilai variable panjang_string_di_fungsi_tampilkan di block fungsi tampilkanStringJikaPanjangLebihDari adalah: ', panjang_string_di_fungsi_tampilkan);
+    console.log('nilai variable panjang_string di block fungsi tampilkanStringJikaPanjangLebihDari adalah: ', panjang_string);
+
+    if (panjang_string <= maksimal_panjang) {
+        console.log("panjang string memenuhi maksimal panjang: ", maksimal_panjang);
+    } else {
+        console.log("panjang string melebihi panjang maksimal: ", maksimal_panjang);
+    }
+}
+
+tampilkanStringJikaPanjangLebihDari("ini test", 10);
