@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "ethers": "^6.7.1",
+    "even": "^0.1.1"
+  }
+}
