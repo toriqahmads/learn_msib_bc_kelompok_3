@@ -1,1 +1,1 @@
-console.log('is odd', 6);
+console.log('is odd', 4);
