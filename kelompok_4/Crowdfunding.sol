@@ -159,7 +159,7 @@ contract Crowdfunding is Ownable(msg.sender) {
         Campaign[] memory allCampaigns = new Campaign[](numberOfCampaigns);
         for(uint i = 0; i < numberOfCampaigns; i++) {
             if (campaigns[campaign_list[i]].owner == owner) {
-                allCampaigns[allCampaigns.length - 1] = campaigns[campaign_list[i]];
+                allCampaigns[allCampaigns.length] = campaigns[campaign_list[i]];
             }
         }
         return allCampaigns;
