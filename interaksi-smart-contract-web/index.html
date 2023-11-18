@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+        <script src="./tokenabi.js"></script>
+    </head>
+    <body>
+        <button onclick="connectWallet()" id="connect">Connect wallet</button>
+        <button onclick="getCoinAccountBalance()">Get Balance</button>
+        <button onclick="getAddress()">Get Address</button>
+        <button onclick="initContract()">Get Contracts</button>
+        <button onclick="getTokenDecimal()">Get Token Decimal</button>
+        <button onclick="getTokenName()">Get Token Name</button>
+
+        </br>
+        <input id="to" type="text"> send balance to
+        <input id="amount" type="text"> send balance amoun
+        <button onclick="sendBalance()">Send Balance</button>
+
+        </br>
+        <input id="_token_to" type="text"> send token to
+        <input id="_token_amount" type="text"> send token amoun
+        <button onclick="sendToken()">Send Token</button>
+
+        </br>
+        <input id="award_token_to" type="text"> award token to
+        <input id="award_token_amount" type="text"> award token amoun
+        <button onclick="awardToken()">Award Token</button>
+
+
+        <script>
+            let provider;
+            let signer;
+            let contract;
+
+            async function connectWallet() {
+                if (!window.ethereum) {
+                    alert('harap install metamask terlebih dahulu');
+                }
+
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
+
+                signer = provider.getSigner();
+
+                console.log('is signer', signer);
+
+                document.getElementById("connect").innerText = "connected";
+            }
+
+            async function getCoinAccountBalance() {
+                if (!signer) await connectWallet();
+                const balance = await signer.getBalance(signer.address);
+                // format ethers should filled with wei, wei is 18 decimal from ether
+                // return wei to ether (1 * 10 ** 18 ===> 1);
+                const formatted = ethers.utils.formatEther(balance);
+
+                console.log('formated', formatted);
+                return formatted;
+            }
+
+            async function getAddress() {
+                if (!signer) await connectWallet();
+                const address = await signer.getAddress();
+                console.log(address);
+                return address;
+            }
+
+            async function initContract() {
+                if (!signer) await connectWallet();
+                const _contract = new ethers.Contract("0x9b6576434b0e3e48b3c38ac4db1586dbc24acbad", tokenAbi);
+                contract = _contract.connect(signer);
+
+                console.log(contract);
+                return contract;
+            }
+
+            async function getTokenDecimal() {
+                if (!contract) await initContract();
+                const decimal = await contract.decimals();
+                console.log(decimal);
+                return decimal;
+            }
+
+            async function getTokenName() {
+                if (!contract) await initContract();
+                const name = await contract.name();
+                console.log(name);
+                return name;
+            }
+
+            async function awardToken() {
+                if (!signer) await initContract();
+
+                const amount = document.getElementById('award_token_amount').value;
+                const to = document.getElementById('award_token_to').value;
+                const decimal = await getTokenDecimal();
+                const formated_amount = ethers.utils.parseUnits(amount, decimal);
+                const tx = await contract.awardToken(to, formated_amount);
+
+                console.log('tx', tx);
+                await tx.wait();
+                console.log('tx wait', tx);
+
+                return tx;
+            }
+
+            // send token (interaksi ke smart contract)
+            async function sendToken() {
+                if (!signer) await initContract();
+
+                const amount = document.getElementById('_token_amount').value;
+                const to = document.getElementById('_token_to').value;
+                const formated_amount = ethers.utils.parseUnits(amount, await getTokenDecimal());
+                return await contract.transfer(to, formated_amount);
+            }
+
+            // amount format is in ether
+            // send coin (tidak ada interaksi ke smart contract, langsung ke blockchain aja)
+            async function sendBalance() {
+                if (!signer) await connectWallet();
+                // parse ether should filled with ether, 0.001 0.1 1
+                // return ether to wei (1 ===> 1 * 10 ** 18)
+                const amount = document.getElementById('amount').value;
+                const to = document.getElementById('to').value;
+                const amount_to_wei = ethers.utils.parseEther(amount);
+
+                const send = await signer.sendTransaction({
+                    to: to,
+                    value: amount_to_wei
+                });
+
+                console.log('send', send);
+                await send.wait();
+                console.log('send', send);
+                return send;
+            }
+        </script>
+    </body>
+</html>
